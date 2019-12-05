@@ -10,7 +10,7 @@ namespace AdventOfCode
         public static void Solve()
         {
             var input = File.ReadAllLines("Day3.txt");
-            var visits = new Dictionary<(int, int), Dictionary<int, int>>();
+            var grid = new Dictionary<(int, int), Dictionary<int, int>>();
 
             for (var wire = 0; wire < input.Length; wire++)
             {
@@ -39,21 +39,23 @@ namespace AdventOfCode
                         y += vecY;
                         dist++;
 
-                        if (!visits.TryGetValue((x, y), out var pos))
-                            visits.Add((x, y), pos = new Dictionary<int, int>()); // We've not been here before
+                        if (!grid.TryGetValue((x, y), out var visit))
+                            grid.Add((x, y), visit = new Dictionary<int, int>()); // We've not been here before
 
                         // If the position contains the wire, we'd intersect with ourselves. We explicitly don't want that,
                         // because itd overwrite our previous dist.
-                        if (!pos.ContainsKey(wire))
-                            pos[wire] = dist;
+                        if (!visit.ContainsKey(wire))
+                            visit[wire] = dist;
                     }
                 }
             }
 
             // Visits with one or fewer visits can never be an intersection.
-            var closest = visits.Where(v => v.Value.Count >= 2).Select(v => Math.Abs(v.Key.Item1) + Math.Abs(v.Key.Item2)).Min();
+            var closest = grid.Where(v => v.Value.Count >= 2).Select(v => Math.Abs(v.Key.Item1) + Math.Abs(v.Key.Item2)).Min();
+            var cheapest = grid.Where(v => v.Value.Count >= 2).Select(pos => pos.Value.Values.Sum()).Min();
 
             Console.WriteLine(closest);
+            Console.WriteLine(cheapest);
         }
     }
 }
