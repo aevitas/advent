@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,30 +10,55 @@ namespace AdventOfCode
     {
         public static async Task Solve()
         {
-            var mem = (await File.ReadAllTextAsync("Day2.txt")).Split(",").Select(int.Parse).ToArray();
+            var input = (await File.ReadAllTextAsync("Day2.txt")).Split(",").Select(int.Parse).ToArray();
+            var mem = input.ToArray();
 
             mem[1] = 12;
             mem[2] = 2;
 
-            for (int i = 0; i < mem.Length;)
+            Console.WriteLine(Compute(mem));
+
+            for (int i = 0; i < 99; i++)
             {
-                int opCode = mem[i];
+                for (int y = 0; y < 99; y++)
+                {
 
-                if (opCode == 99)
-                    break;
+                    mem = input.ToArray();
 
-                if (opCode != 1 && opCode != 2)
-                    throw new NotSupportedException($"Unknown OpCode encountered: {opCode}");
+                    mem[1] = i;
+                    mem[2] = y;
 
-                var lhv = mem[mem[i + 1]]; // left operand
-                var rhv = mem[mem[i + 2]]; // right operand
+                    if (Compute(mem) == 19690720)
+                    {
+                        Console.WriteLine(100 * i + y);
 
-                mem[mem[i + 3]] = opCode == 1 ? lhv + rhv : lhv * rhv; // ret
-
-                i += 4;
+                        break;
+                    }
+                }
             }
 
-            Console.WriteLine(mem[0]);
+            int Compute(int[] memory)
+            {
+                for (int i = 0; i < memory.Length;)
+                {
+                    int opCode = memory[i];
+
+                    if (opCode == 99)
+                        break;
+
+                    if (opCode != 1 && opCode != 2)
+                        Debug.WriteLine($"Unknown OpCode: {opCode}");
+
+                    var lhv = memory[memory[i + 1]]; // left operand
+                    var rhv = memory[memory[i + 2]]; // right operand
+
+                    memory[memory[i + 3]] = opCode == 1 ? lhv + rhv : lhv * rhv; // ret
+
+                    i += 4;
+                }
+
+                return memory[0];
+            }
         }
     }
 }
