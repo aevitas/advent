@@ -57,6 +57,32 @@ namespace AdventOfCode
                             Console.WriteLine(GetParameter(0));
                             i += 2;
                             break;
+                        case 5:
+                            if (GetParameter(0) != 0)
+                                i = GetParameter(1);
+                            else
+                            {
+                                i += 3;
+                            }
+                            break;
+                        case 6:
+                            if (GetParameter(0) == 0)
+                                i = GetParameter(1);
+                            else
+                            {
+                                i += 3;
+                            }
+                            break;
+                        case 7:
+                            GetParameter(2) = GetParameter(0) < GetParameter(1) ? 1 : 0;
+                            i += 4;
+                            break;
+                        case 8:
+                            GetParameter(2) = GetParameter(0) == GetParameter(1) ? 1 : 0;
+                            i += 4;
+                            break;
+                        case 99:
+                            return;
                     }
                 }
             }
