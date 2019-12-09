@@ -11,7 +11,7 @@ namespace AdventOfCode
         {
             var input = File.ReadAllText("Day6.txt").Split(Environment.NewLine).Select(i => i.Split(')'));
 
-            var directOrbits = new Dictionary<string, HashSet<string>>();
+            var directOrbits = new Dictionary<string, HashSet<string>> {{"COM", new HashSet<string>()}};
 
             foreach (var i in input)
             {
@@ -21,13 +21,18 @@ namespace AdventOfCode
                 {
                     directOrbits.Add(o, new HashSet<string>
                     {
-                        "COM",
                         i[1]
                     });
                     continue;
                 }
 
                 directOrbits[o].Add(i[1]);
+            }
+
+            
+            foreach (var o in directOrbits)
+            {
+
             }
         }
     }
