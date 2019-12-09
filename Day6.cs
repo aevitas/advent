@@ -30,24 +30,12 @@ namespace AdventOfCode
             }
 
             // For each mass, get the planets they're orbiting. Keep doing that ad nauseam until we eventually run out. Count along the way.
-            var indirectOrbitCount = 0;
-            foreach (var mass in input.Distinct())
+            foreach (var (key, value) in directOrbits)
             {
-                var m = mass[1];
+                var linkedMasses = GetLinkedMasses(key);
 
-                var count = 0;
-                bool any = true;
-                while (any)
-                {
-                    var linkedMasses = GetLinkedMasses(m);
-                    var c = linkedMasses.Sum(o => o.Value.Count);
-
-                    any = c > count;
-
-                    count += c;
-                }
-
-                indirectOrbitCount += count;
+                foreach (var mass in linkedMasses)
+                    value.UnionWith(mass.Value);
             }
 
             List<KeyValuePair<string, HashSet<string>>> GetLinkedMasses(string mass)
@@ -55,7 +43,7 @@ namespace AdventOfCode
                 return directOrbits.Where(o => o.Value.Contains(mass)).ToList();
             }
 
-            Console.WriteLine(directOrbits.Count + indirectOrbitCount);
+            Console.WriteLine($"{directOrbits.Sum(o => o.Value.Count)}");
         }
     }
 }
