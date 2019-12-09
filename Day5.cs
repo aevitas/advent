@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace AdventOfCode
 {
@@ -10,37 +8,31 @@ namespace AdventOfCode
     {
         public static void Solve()
         {
-            var input = File.ReadAllText("Day5.txt").Split(",").Select(int.Parse).ToArray();
+            var input = File.ReadAllText("Day5.txt");
+            var memory = input.Split(",").Select(int.Parse).ToArray();
 
-            Run(input);
+            Run(memory);
 
             void Run(int[] mem)
             {
-
-                for (int i = 0; i < mem.Length; i++)
+                int i = 0;
+                while (true)
                 {
-                    int GetParameter(int index, bool deref) => deref ? mem[mem[i + 1 + index]] : mem[i + 1 + index];
-
-                    bool ShouldDeref(int index)
+                    // Hail JBN for this func, making life a lot easier.
+                    ref int GetParameter(int index)
                     {
-                        var divisor = 1;
+                        ref int start = ref mem[i + 1 + index];
 
-                        switch (index)
-                        {
-                            case 0:
-                                divisor *= 10;
-                                break;
-                            case 1:
-                                divisor *= 100;
-                                break;
-                            case 2:
-                                divisor *= 1000;
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
-                        }
+                        int div = 1;
+                        for (int y = 0; y < index; y++)
+                            div *= 10;
 
-                        return mem[i] / 100 / divisor % 10 == 0;
+                        int mode = (mem[i] / 100) / div % 10;
+
+                        if (mode == 0)
+                            return ref mem[start];
+
+                        return ref start;
                     }
 
                     var opcode = mem[i] % 100;
@@ -48,10 +40,22 @@ namespace AdventOfCode
                     switch (opcode)
                     {
                         case 1:
-                            var result = GetParameter(0, ShouldDeref(0)) + GetParameter(1, ShouldDeref(1));
-
-                            mem[i + 2] = result;
+                            GetParameter(2) = GetParameter(0) + GetParameter(1);
                             i += 4;
+                            break;
+                        case 2:
+                            GetParameter(2) = GetParameter(0) * GetParameter(1);
+                            i += 4;
+                            break;
+                        case 3:
+                            Console.WriteLine("Diagnostic input:");
+                            var input = int.Parse(Console.ReadLine());
+                            GetParameter(0) = input;
+                            i += 2;
+                            break;
+                        case 4:
+                            Console.WriteLine(GetParameter(0));
+                            i += 2;
                             break;
                     }
                 }
