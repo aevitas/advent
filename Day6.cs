@@ -15,32 +15,26 @@ namespace AdventOfCode
 
             foreach (var i in input)
             {
-                var o = i[0];
+                var key = i[1];
+                var value = i[0];
 
-                if (!directOrbits.ContainsKey(i[0]))
+                if (!directOrbits.ContainsKey(key))
                 {
-                    directOrbits.Add(o, new HashSet<string>
+                    directOrbits.Add(key, new HashSet<string>
                     {
-                        i[1]
+                        value
                     });
                     continue;
                 }
 
-                directOrbits[o].Add(i[1]);
+                directOrbits[key].Add(value);
             }
 
             // For each mass, get the planets they're orbiting. Keep doing that ad nauseam until we eventually run out. Count along the way.
-            foreach (var (key, value) in directOrbits)
+            foreach (var o in directOrbits)
             {
-                var linkedMasses = GetLinkedMasses(key);
-
-                foreach (var mass in linkedMasses)
-                    value.UnionWith(mass.Value);
-            }
-
-            List<KeyValuePair<string, HashSet<string>>> GetLinkedMasses(string mass)
-            {
-                return directOrbits.Where(o => o.Value.Contains(mass)).ToList();
+                foreach (var p in o.Value.ToList())
+                    o.Value.UnionWith(directOrbits[p]);
             }
 
             Console.WriteLine($"{directOrbits.Sum(o => o.Value.Count)}");
