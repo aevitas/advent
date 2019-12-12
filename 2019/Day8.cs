@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,32 +9,41 @@ namespace AdventOfCode
     {
         public static async Task Solve()
         {
-            var input = File.ReadAllText("Day8.txt");
-            var layers = new List<int[]>();
+            const int width = 25;
+            const int height = 6;
+            var input = File.ReadAllText("Day8.txt").Select(c => (int) char.GetNumericValue(c)).ToArray();
+            var layerCount = input.Length / width / height;
+            var layers = Enumerable.Range(0, layerCount).Select(_ => new int[width][]).ToArray();
+            int i = 0;
 
-            for (int i = 0; i < 6; i++)
-                layers.Add(input.Skip(i * 25).Take(25).Select(c => (int) char.GetNumericValue(c)).ToArray());
+            for (int l = 0; l < layerCount; l++)
+            {
+                layers[l] = new int[height][];
+                for (int y = 0; y < height; y++)
+                {
+                    layers[l][y] = new int[width];
+                    for (int x = 0; x < width; x++)
+                    {
+                        layers[l][y][x] = input[i++];
+                    }
+                }
+            }
 
-            int fewestZeroes = int.MaxValue;
-            int[] layer = layers.First();
-
+            var leastZeroes = int.MaxValue;
+            var layer = layers.First();
             foreach (var l in layers)
             {
-                var count = GetNumberCount(l, 0);
-
-                if (count >= fewestZeroes) 
-                    continue;
-
-                layer = l;
-                fewestZeroes = count;
+                var c = l.Sum(o => o.Count(num => num == 0));
+                if (c < leastZeroes)
+                {
+                    layer = l;
+                    leastZeroes = c;
+                }
             }
 
-            Console.WriteLine(layer.Count(i => i == 1) * layer.Count(i => i == 2));
+            var sum = layer.Sum(l => l.Count(num => num == 1)) * layer.Sum(l => l.Count(num => num == 2));
 
-            int GetNumberCount(int[] arr, int num)
-            {
-                return arr.Count(i => i == num);
-            }
+            Console.WriteLine(sum);
         }
     }
 }
