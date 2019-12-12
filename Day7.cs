@@ -14,30 +14,63 @@ namespace AdventOfCode
         {
             var code = File.ReadAllText("Day7.txt").Split(",").Select(int.Parse).ToImmutableArray();
 
-            int max = -1;
-            var permutations = new[] { 0, 1, 2, 3, 4 }.Permutations();
-            var outputBlock = new BufferBlock<int>();
-            foreach (var p in permutations)
+            async Task PartOne()
             {
-                var q = p.ToArray();
-                var inputBlock = new BufferBlock<int>();
-
-                var s = 0;
-                for (int i = 0; i < q.Length; i++)
+                int max = -1;
+                var permutations = new[] { 0, 1, 2, 3, 4 }.Permutations();
+                var outputBlock = new BufferBlock<int>();
+                foreach (var p in permutations)
                 {
-                    inputBlock.Post(q[i]);
-                    inputBlock.Post(s);
-                    Run(code.ToArray(), inputBlock, outputBlock);
+                    var q = p.ToArray();
+                    var inputBlock = new BufferBlock<int>();
 
-                    s = outputBlock.Receive();
+                    var s = 0;
+                    for (int i = 0; i < q.Length; i++)
+                    {
+                        inputBlock.Post(q[i]);
+                        inputBlock.Post(s);
+                        await Run(code.ToArray(), inputBlock, outputBlock);
+
+                        s = outputBlock.Receive();
+                    }
+
+                    max = Math.Max(max, s);
                 }
-                
-                max = Math.Max(max, s);
+
+                Console.WriteLine(max);
             }
 
-            Console.WriteLine(max);
+            async Task PartTwo()
+            {
+                var permutations = new[] {5, 6, 7, 8, 9}.Permutations().ToArray();
+                var max = -1;
+                foreach (var p in permutations)
+                {
+                    var c = code.ToArray();
+                    var q = p.ToArray();
+                    var amps = Enumerable.Range(0, q.Length).Select(a => new BufferBlock<int>()).ToArray();
+                    var tasks = new List<Task> { Task.CompletedTask };
 
-            void Run(int[] mem, BufferBlock<int> blockIn, BufferBlock<int> blockOut)
+                    for (int i = 0; i < q.Length; i++)
+                    {
+                        amps[i].Post(q[i]);
+                        tasks.Add(Run(c, amps[i], amps[i < amps.Length - 1 ? i + 1 : amps.Length - 1]));
+                    }
+
+                    amps[0].Post(0);
+
+                    await Task.WhenAll(tasks);
+
+                    max = Math.Max(max, await amps[0].ReceiveAsync());
+                }
+
+                Console.WriteLine(max);
+            }
+
+            //await PartOne();
+            await PartTwo();
+
+            async Task Run(int[] mem, ISourceBlock<int> blockIn, ITargetBlock<int> blockOut)
             {
                 int i = 0;
                 while (true)
@@ -61,6 +94,8 @@ namespace AdventOfCode
 
                     var opcode = mem[i] % 100;
 
+                    Console.WriteLine(opcode);
+
                     switch (opcode)
                     {
                         case 1:
@@ -72,7 +107,7 @@ namespace AdventOfCode
                             i += 4;
                             break;
                         case 3:
-                            var input = blockIn.Receive();
+                            var input = await blockIn.ReceiveAsync();
                             GetParameter(0) = input;
                             i += 2;
                             break;
