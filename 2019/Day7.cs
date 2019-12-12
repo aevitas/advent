@@ -42,7 +42,7 @@ namespace AdventOfCode
 
             async Task PartTwo()
             {
-                var permutations = new[] {5, 6, 7, 8, 9}.Permutations().ToArray();
+                var permutations = new[] { 5, 6, 7, 8, 9 }.Permutations().ToArray();
                 var max = -1;
                 foreach (var p in permutations)
                 {
