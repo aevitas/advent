@@ -44,6 +44,19 @@ namespace AdventOfCode
             var sum = layer.Sum(l => l.Count(num => num == 1)) * layer.Sum(l => l.Count(num => num == 2));
 
             Console.WriteLine(sum);
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int v = Enumerable.Range(0, layerCount).Select(num => layers[num][y][x])
+                        .FirstOrDefault(num => num != 2);
+
+                    Console.Write(v == 0 ? " " : "X");
+                }
+
+                Console.Write(Environment.NewLine);
+            }
         }
     }
 }
