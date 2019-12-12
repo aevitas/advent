@@ -46,15 +46,14 @@ namespace AdventOfCode
                 var max = -1;
                 foreach (var p in permutations)
                 {
-                    var c = code.ToArray();
-                    var q = p.ToArray();
-                    var amps = Enumerable.Range(0, q.Length).Select(a => new BufferBlock<int>()).ToArray();
+                    var perm = p.ToArray();
+                    var amps = Enumerable.Range(0, perm.Length).Select(a => new BufferBlock<int>()).ToArray();
                     var tasks = new List<Task> { Task.CompletedTask };
 
-                    for (int i = 0; i < q.Length; i++)
+                    for (int i = 0; i < perm.Length; i++)
                     {
-                        amps[i].Post(q[i]);
-                        tasks.Add(Run(c, amps[i], amps[i < amps.Length - 1 ? i + 1 : amps.Length - 1]));
+                        amps[i].Post(perm[i]);
+                        tasks.Add(Run(code.ToArray(), amps[i], amps[(i + 1) % amps.Length]));
                     }
 
                     amps[0].Post(0);
@@ -67,7 +66,7 @@ namespace AdventOfCode
                 Console.WriteLine(max);
             }
 
-            //await PartOne();
+            await PartOne();
             await PartTwo();
 
             async Task Run(int[] mem, ISourceBlock<int> blockIn, ITargetBlock<int> blockOut)
@@ -93,8 +92,6 @@ namespace AdventOfCode
                     }
 
                     var opcode = mem[i] % 100;
-
-                    Console.WriteLine(opcode);
 
                     switch (opcode)
                     {
