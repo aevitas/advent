@@ -12,7 +12,7 @@ namespace AdventOfCode
             using var sr = new StreamReader("Day1.txt");
             var input = await sr.ReadToEndAsync();
 
-            var masses = input.Split(Environment.NewLine).Select(int.Parse).ToList();
+            var masses = input.Split('\n').Select(int.Parse).ToList();
             var one = masses.Sum(i => i / 3 - 2); // Can skip Math.Floor because of int
 
             Console.WriteLine(one);
