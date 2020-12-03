@@ -9,10 +9,7 @@ namespace Advent
     {
         public static async Task PartOneAsync()
         {
-            using var sr = new StreamReader("Day2.txt");
-            var input = await sr.ReadToEndAsync();
-
-            var passwords = input.Split(Environment.NewLine);
+            var passwords = await ReadPasswordsAsync();
             int numValid = 0;
 
             foreach (var p in passwords)
@@ -34,10 +31,7 @@ namespace Advent
 
         public static async Task PartTwoAsync()
         {
-            using var sr = new StreamReader("Day2.txt");
-            var input = await sr.ReadToEndAsync();
-
-            var passwords = input.Split(Environment.NewLine);
+            var passwords = await ReadPasswordsAsync();
             int numValid = 0;
 
             foreach (var p in passwords)
@@ -61,6 +55,16 @@ namespace Advent
             }
 
             Console.WriteLine(numValid);
+        }
+
+        private static async Task<string[]> ReadPasswordsAsync()
+        {
+            using var sr = new StreamReader("Day2.txt");
+            var input = await sr.ReadToEndAsync();
+
+            var passwords = input.Split(Environment.NewLine);
+
+            return passwords;
         }
     }
 }

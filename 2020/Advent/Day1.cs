@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Advent
@@ -10,10 +9,7 @@ namespace Advent
     {
         public static async Task PartOneAsync()
         {
-            using var sr = new StreamReader("Day1.txt");
-            var input = await sr.ReadToEndAsync();
-
-            var expenses = input.Split(Environment.NewLine).Select(int.Parse).ToArray();
+            var expenses = await ReadExpensesAsync();
 
             for (int i = 0; i < expenses.Length; i++)
             {
@@ -34,10 +30,7 @@ namespace Advent
 
         public static async Task PartTwoAsync()
         {
-            using var sr = new StreamReader("Day1.txt");
-            var input = await sr.ReadToEndAsync();
-
-            var expenses = input.Split(Environment.NewLine).Select(int.Parse).ToArray();
+            var expenses = await ReadExpensesAsync();
 
             for (int i = 0; i < expenses.Length; i++)
             {
@@ -60,6 +53,16 @@ namespace Advent
                     }
                 }
             }
+        }
+
+        private static async Task<int[]> ReadExpensesAsync()
+        {
+            using var sr = new StreamReader("Day1.txt");
+            var input = await sr.ReadToEndAsync();
+
+            var expenses = input.Split(Environment.NewLine).Select(int.Parse).ToArray();
+
+            return expenses;
         }
     }
 }
