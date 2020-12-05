@@ -67,6 +67,9 @@ namespace Advent
                         return false;
                 }
 
+                if (!height.EndsWith("in") && !height.EndsWith("cm"))
+                    return false;
+
                 var hairColor = GetField("hcl");
 
                 if (!hairColor.StartsWith('#'))
