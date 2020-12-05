@@ -7,7 +7,7 @@ namespace Advent
 {
     internal static class Day5
     {
-        public static void PartOne()
+        public static void Solve()
         {
             var sr = new StreamReader("Day5.txt");
             var boardingPasses = sr.ReadToEnd().Split(Environment.NewLine);
@@ -49,12 +49,34 @@ namespace Advent
                 }
 
                 var id = row[0] * 8 + col[0];
-                Console.WriteLine($"Row {row[0]} - Seat {col[0]} -> {id}");
-
                 seatIds.Add(id);
             }
 
-            Console.WriteLine(seatIds.Max());
+            PartOne();
+            PartTwo();
+
+            void PartOne()
+            {
+                Console.WriteLine(seatIds.Max());
+            }
+
+            void PartTwo()
+            {
+                int? prev = null;
+                foreach (var s in seatIds.OrderBy(i => i))
+                {
+                    //Console.WriteLine(s);
+
+                    prev ??= s;
+
+                    if (s - prev > 1)
+                    {
+                        Console.WriteLine(s - 1);
+                    }
+
+                    prev = s;
+                }
+            }
         }
     }
 }
