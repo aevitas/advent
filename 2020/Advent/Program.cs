@@ -7,7 +7,7 @@ namespace Advent
     {
         static async Task Main(string[] args)
         {
-            await Day7.PartOneAsync();
+            Day8.PartOne();
 
             Console.ReadLine();
         }
