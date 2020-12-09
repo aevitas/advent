@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace Advent
 {
@@ -34,6 +35,31 @@ namespace Advent
 
             foreach (var num in remaining)
                 Console.WriteLine(num);
+        }
+
+        public static void PartTwo()
+        {
+            using var sr = new StreamReader("Day9.txt");
+            long[] xmas = sr.ReadToEnd().Split(Environment.NewLine).Select(long.Parse).ToArray();
+            long target = 1930745883;
+
+            for (int i = 0; i < xmas.Length; i++)
+            {
+                long val = xmas[i];
+                int cur = i;
+
+                while (val < target)
+                {
+                    cur += 1;
+                    val += xmas[cur];
+
+                    if (val == target)
+                    {
+                        var nums = xmas[i..(cur + 1)];
+                        Console.WriteLine(nums.Min() + nums.Max());
+                    }
+                }
+            }
         }
     }
 }
