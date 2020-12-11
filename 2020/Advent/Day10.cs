@@ -29,42 +29,25 @@ namespace Advent
         public static void PartTwo()
         {
             using var sr = new StreamReader("Day10.txt");
-            var adapters = sr.ReadToEnd().Split(Environment.NewLine).Select(int.Parse).OrderBy(i => i).ToArray();
+            var adapters = sr.ReadToEnd().Split(Environment.NewLine).Select(long.Parse).OrderBy(i => i).ToList();
 
-            var clusters = GetContiguousAdapters(adapters);
-            long configs = 1;
+            adapters = adapters.Prepend(0).ToList();
+            adapters.Add(adapters.Max() + 3);
 
-            foreach (var c in clusters)
+            adapters.Reverse();
+
+            var tree = new Dictionary<long, long>();
+
+            foreach (var adapter in adapters)
             {
-                var num = c.Length;
-                num -= 1;
-                configs *= 1 + num * (num + 1) / 2; //1 + n*(n+1)/2; - Lazy Caterer's Formula
+                var nexts = adapters.Where(j => j > adapter && j <= adapter + 3);
+                tree[adapter] = nexts.Select(n => tree[n]).Sum();
+
+                if (tree[adapter] == 0)
+                    tree[adapter] = 1;
             }
 
-            Console.WriteLine(configs);
-
-            static IEnumerable<int[]> GetContiguousAdapters(int[] adapters)
-            {
-                var result = new List<int[]>();
-                var cur = new HashSet<int>();
-                for (int i = 0; i < adapters.Length - 1; i++)
-                {
-                    if (adapters[i + 1] - adapters[i] == 1)
-                    {
-                        cur.Add(adapters[i]);
-                        cur.Add(adapters[i + 1]);
-                        continue;
-                    }
-
-                    if (cur.Any())
-                    {
-                        result.Add(cur.ToArray());
-                        cur.Clear();
-                    }
-                }
-
-                return result;
-            }
+            Console.WriteLine(tree[0]);
         }
     }
 }
