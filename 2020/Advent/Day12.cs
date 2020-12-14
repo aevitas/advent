@@ -84,8 +84,8 @@ namespace Advent
                 // Dequeue once more so our next rotation would end up dequeueing the next bearing, instead of our current.
                 compass.Dequeue();
                 
-                // We can only rotate per 45 degrees, as our compass doesn't really understand the notion of SW or NE.
-                // Hence, as long as we have at least 45 degrees left, we can rotate our compass once, and update our heading.
+                // We can only rotate per 90 degrees, as our compass doesn't really understand the notion of SW or NE.
+                // Hence, as long as we have at least 90 degrees left, we can rotate our compass once, and update our heading.
                 var heading = currentHeading;
                 int degreesLeft = degrees;
                 while (degreesLeft >= 90)
