@@ -1,86 +1,75 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Linq;
+using System.Numerics;
 
 namespace Advent
 {
     internal static class Day11
     {
+        private record Seat
+        {
+            public Vector2 Position { get; init; }
+
+            public char State { get; init; }
+        }
+
         public static void PartOne()
         {
-            var seats = CreateGrid();
-            string last = string.Empty;
+            var seats = GetSeats().ToList();
 
-            do
+            RenderGrid(seats);
+
+            while (true)
             {
-                last = AsString(seats);
-
-                for (int y = 0; y < seats.GetLength(1); y++)
+                var updated = new List<Seat>();
+                foreach (var s in seats)
                 {
-                    for (int x = 0; x < seats.GetLength(0); x++)
+                    if (s.State == '.')
                     {
-                        var state = seats[x, y];
+                        updated.Add(s);
+                        continue;
+                    }
 
-                        if (state == 'L')
+                    var adjacents = GetNeighbours(s, seats).ToArray();
+
+                    if (s.State == 'L')
+                    {
+                        if (adjacents.All(IsEmpty))
+                            updated.Add(s with { State = '#' });
+                        else
                         {
-                            // If our adjacent seats are free, we'll take this one.
-                            bool vacantAdjacents = true;
-                            if (x > 0)
-                                if (seats[x - 1, y] != 'L')
-                                    vacantAdjacents = false;
-
-                            if (x < seats.GetLength(0) - 1)
-                                if (seats[x + 1, y] != 'L')
-                                    vacantAdjacents = false;
-
-                            if (vacantAdjacents)
-                            {
-                                if (x > 0)
-                                    seats[x - 1, y] = '#';
-
-                                if (x < seats.GetLength(0) - 1)
-                                    seats[x + 1, y] = '#';
-                            }
+                            updated.Add(s);
                         }
+                    }
 
-                        if (state == '#')
+
+                    if (s.State == '#')
+                    {
+                        if (adjacents.Count(a => !IsEmpty(a)) >= 4)
+                            updated.Add(s with { State = 'L' });
+                        else
                         {
-                            if (x > 4)
-                            {
-                                int leftAdjacentOccupied = 0;
-                                for (int lx = x; lx > 0; lx--)
-                                {
-                                    if (seats[lx, y] == '#')
-                                        leftAdjacentOccupied++;
-                                }
-
-                                if (leftAdjacentOccupied >= 4)
-                                    seats[x, y] = 'L';
-                            }
-
-                            if (x < seats.GetLength(0) - 4)
-                            {
-                                int rightAdjacentOccupied = 0;
-                                for (int lr = x; lr > 0; lr--)
-                                {
-                                    if (seats[lr, y] == '#')
-                                        rightAdjacentOccupied++;
-                                }
-
-                                if (rightAdjacentOccupied >= 4)
-                                    seats[x, y] = 'L';
-                            }
+                            updated.Add(s);
                         }
                     }
                 }
 
-                RenderGrid(seats);
-            } while (AsString(seats) != last);
+                RenderGrid(updated);
 
-            RenderGrid(seats);
+                if (seats.SequenceEqual(updated))
+                    break;
+                
+                seats = updated;
+            }
+
+            Seat GetSeat(int x, int y) => seats.FirstOrDefault(s => s.Position == new Vector2(x, y));
+
+            bool IsEmpty(Seat s) => s.State == '.' || s.State == 'L';
         }
 
-        private static char[,] CreateGrid()
+        private static IEnumerable<Seat> GetSeats()
         {
             using var sr = new StreamReader("Day11.txt");
             var input = sr.ReadToEnd().Split(Environment.NewLine);
@@ -89,35 +78,46 @@ namespace Advent
             for (int y = 0; y < grid.GetLength(1); y++)
             {
                 for (int x = 0; x < input.GetLength(0); x++)
-                    grid[x, y] = input[y][x];
+                    yield return new Seat { Position = new Vector2(x, y), State = input[y][x] };
             }
-
-            return grid;
         }
 
-        private static void RenderGrid(char[,] grid)
+        private static IEnumerable<Seat> GetNeighbours(Seat seat, IEnumerable<Seat> nodes)
         {
-            for (int y = 0; y < grid.GetLength(1); y++)
+            var positions = new Vector2[]
             {
-                for (int x = 0; x < grid.GetLength(0); x++)
-                    Console.Write(grid[x, y]);
+                new(seat.Position.X - 1, seat.Position.Y), // Left
+                new(seat.Position.X + 1, seat.Position.Y), // Right
+                new(seat.Position.X - 1, seat.Position.Y - 1), // Top left
+                new(seat.Position.X + 1, seat.Position.Y - 1), // Top right
+                new(seat.Position.X, seat.Position.Y - 1), // Above
+                new(seat.Position.X, seat.Position.Y + 1), // Below
+                new(seat.Position.X - 1, seat.Position.Y + 1), // Bottom left
+                new(seat.Position.X + 1, seat.Position.Y + 1) // Bottom right
+            };
+
+            foreach (var p in positions)
+            {
+                var s = GetSeatOrDefault(p);
+
+                if (s != null)
+                    yield return s;
+            }
+
+            Seat GetSeatOrDefault(Vector2 position) => nodes.FirstOrDefault(s => s.Position == position);
+        }
+
+        private static void RenderGrid(IEnumerable<Seat> seats)
+        {
+            foreach (var row in seats.GroupBy(s => s.Position.Y))
+            {
+                foreach (var s in row)
+                    Console.Write(s.State);
 
                 Console.WriteLine();
             }
 
             Console.WriteLine();
-        }
-
-        private static string AsString(char[,] grid)
-        {
-            var sb = new StringBuilder();
-            for (int y = 0; y < grid.GetLength(1); y++)
-            {
-                for (int x = 0; x < grid.GetLength(0); x++)
-                    sb.Append(grid[x, y]);
-            }
-
-            return sb.ToString();
         }
     }
 }
