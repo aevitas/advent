@@ -19,8 +19,6 @@ namespace Advent
         {
             var seats = GetSeats().ToList();
 
-            RenderGrid(seats);
-
             while (true)
             {
                 var updated = new List<Seat>();
@@ -56,13 +54,17 @@ namespace Advent
                     }
                 }
 
-                RenderGrid(updated);
+                // RenderGrid(updated);
 
                 if (seats.SequenceEqual(updated))
                     break;
                 
                 seats = updated;
             }
+            
+            RenderGrid(seats);
+
+            Console.WriteLine(seats.Count(s => s.State == '#'));
 
             Seat GetSeat(int x, int y) => seats.FirstOrDefault(s => s.Position == new Vector2(x, y));
 
