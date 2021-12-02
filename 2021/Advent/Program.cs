@@ -1,3 +1,4 @@
 ﻿using Advent;
 
-await Day1.Solve();
+Day1.PartOne();
+Day1.PartTwo();
