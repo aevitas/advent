@@ -6,7 +6,7 @@ internal static class Day1
 
     public static void PartOne()
     {
-        var input = Input;
+        var input = Input.ToArray();
 
         int count = 0;
         for (int i = 0; i < input.Length - 1; i++)
@@ -20,7 +20,7 @@ internal static class Day1
 
     public static void PartTwo()
     {
-        var input = Input;
+        var input = Input.ToArray();
 
         int count = 0;
         for (int i = 0; i < input.Length - 3; i++)
