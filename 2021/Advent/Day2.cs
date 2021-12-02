@@ -34,4 +34,36 @@ internal static class Day2
             return velocity;
         }
     }
+
+    public static void PartTwo()
+    {
+        Vector3 position = Vector3.Zero;
+        int aim = 0;
+        var input = Input.ToArray();
+
+        foreach (var line in input)
+        {
+            var instr = line.Split(' ')[0];
+            var units = int.Parse(line.Split(' ')[1]);
+
+            if (instr == "forward")
+            {
+                position.X += units;
+                position.Z += aim * units;
+
+                continue;
+            }
+
+            var aimDelta = instr switch
+            {
+                "up" => -units,
+                "down" => units,
+                _ => throw new ArgumentOutOfRangeException($"unk instr: {instr}")
+            };
+
+            aim += aimDelta;
+        }
+
+        Console.WriteLine(position.X * position.Z);
+    }
 }
