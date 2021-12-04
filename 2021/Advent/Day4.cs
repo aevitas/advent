@@ -12,7 +12,7 @@ internal static class Day4
         int[] draws = input[0].Split(',').Select(int.Parse).ToArray();
 
         var boards = GetBoards(input);
-
+        
         foreach (var num in draws)
         {
             foreach (var b in boards)
@@ -22,6 +22,42 @@ internal static class Day4
 
                 if (b.HasBingo())
                 {
+                    var unmarkedSum = b.GetUnmarked().Sum();
+
+                    Console.WriteLine(unmarkedSum * num);
+
+                    return;
+                }
+            }
+        }
+    }
+
+    public static void PartTwo()
+    {
+        var input = Input.ToArray();
+        int[] draws = input[0].Split(',').Select(int.Parse).ToArray();
+
+        var boards = GetBoards(input);
+        
+        foreach (var num in draws)
+        {
+            foreach (var b in boards)
+            {
+                if (b.State.ContainsKey(num))
+                    b.Hits.Add(num);
+
+                if (b.HasBingo())
+                {
+                    // Previous bingo
+                    if (b.HasWon)
+                        continue;
+
+                    if (boards.Count(board => !board.HasWon) > 1)
+                    {
+                        b.HasWon = true;
+                        continue;
+                    }
+
                     var unmarkedSum = b.GetUnmarked().Sum();
 
                     Console.WriteLine(unmarkedSum * num);
@@ -50,6 +86,8 @@ internal static class Day4
         public Dictionary<int, Vector2> State { get; } = new();
 
         public List<int> Hits { get; } = new();
+
+        public bool HasWon { get; set; }
 
         public static Board FromLines(string[] lines)
         {
