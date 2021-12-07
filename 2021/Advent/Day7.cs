@@ -7,7 +7,7 @@ internal static class Day7
     public static void PartOne()
     {
         var positions = Input.ToArray()[0].Split(',').Select(int.Parse).ToArray();
-        
+
         var max = positions.Max();
         var costs = new List<int>();
         for (int i = 0; i < max; i++) // We align to this coord
@@ -15,13 +15,67 @@ internal static class Day7
             var roundCost = new List<int>();
             foreach (var pos in positions)
             {
+                int exp = 1;
+                int cost = 0;
                 if (pos > i)
                 {
-                    roundCost.Add(pos - i);
+                    for (int y = 0; y < pos - i; y++)
+                    {
+                        cost += exp;
+                        exp++;
+                    }
+
+                    roundCost.Add(cost);
                     continue;
                 }
 
-                roundCost.Add(i - pos);
+                for (int y = 0; y < i - pos; y++)
+                {
+                    cost += exp;
+                    exp++;
+                }
+
+                roundCost.Add(cost);
+            }
+
+            costs.Add(roundCost.Sum());
+        }
+
+        Console.WriteLine(costs.Min());
+    }
+
+    public static void PartTwo()
+    {
+        var positions = Input.ToArray()[0].Split(',').Select(int.Parse).ToArray();
+
+        var max = positions.Max();
+        var costs = new List<int>();
+        for (int i = 0; i < max; i++)
+        {
+            var roundCost = new List<int>();
+            foreach (var pos in positions)
+            {
+                int exp = 1;
+                int cost = 0;
+                if (pos > i)
+                {
+                    for (int y = 0; y < pos - i; y++)
+                    {
+                        cost += exp;
+                        exp++;
+                    }
+
+                    roundCost.Add(cost);
+                    continue;
+                }
+
+                for (int y = 0; y < i - pos; y++)
+                {
+                    cost += exp;
+                    exp++;
+                }
+
+                roundCost.Add(cost);
             }
 
             costs.Add(roundCost.Sum());
