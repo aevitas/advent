@@ -43,19 +43,9 @@ internal static class Day7
             {
                 int exp = 1;
                 int cost = 0;
-                if (pos > i)
-                {
-                    for (int y = 0; y < pos - i; y++)
-                    {
-                        cost += exp;
-                        exp++;
-                    }
+                int delta = pos > i ? pos - i : i - pos;
 
-                    roundCost.Add(cost);
-                    continue;
-                }
-
-                for (int y = 0; y < i - pos; y++)
+                for (int y = 0; y < delta; y++)
                 {
                     cost += exp;
                     exp++;
