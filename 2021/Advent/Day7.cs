@@ -15,27 +15,13 @@ internal static class Day7
             var roundCost = new List<int>();
             foreach (var pos in positions)
             {
-                int exp = 1;
-                int cost = 0;
                 if (pos > i)
                 {
-                    for (int y = 0; y < pos - i; y++)
-                    {
-                        cost += exp;
-                        exp++;
-                    }
-
-                    roundCost.Add(cost);
+                    roundCost.Add(pos - i);
                     continue;
                 }
 
-                for (int y = 0; y < i - pos; y++)
-                {
-                    cost += exp;
-                    exp++;
-                }
-
-                roundCost.Add(cost);
+                roundCost.Add(i - pos);
             }
 
             costs.Add(roundCost.Sum());
