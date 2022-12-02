@@ -42,6 +42,43 @@ public static class Day2
         Console.WriteLine(score);
     }
 
+    public static void PartTwo()
+    {
+        var score = 0;
+        foreach (var line in Input)
+        {
+            var split = line.Split(' ');
+            var opponentMove = OpponentMoves[split[0]];
+            string playerMove;
+            var outcome = split[1];
+
+            // We should lose
+            if (outcome == "X")
+            {
+                playerMove = Moves.FirstOrDefault(m => m.Key == opponentMove).Value;
+                score += GetMovePoints(playerMove);
+
+                continue;
+            }
+
+            // We should win
+            if (outcome == "Z")
+            {
+                playerMove = Moves.FirstOrDefault(m => m.Value == opponentMove).Key;
+                score += GetMovePoints(playerMove);
+                score += 6;
+
+                continue;
+            }
+
+            // We should tie
+            score += GetMovePoints(opponentMove);
+            score += 3;
+        }
+
+        Console.WriteLine(score);
+    }
+
     private static int GetMovePoints(string move)
     {
         return move switch
