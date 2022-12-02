@@ -1,26 +1,18 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"log"
-	"os"
 	"sort"
 	"strconv"
 )
 
-func main() {
-	partOne()
-	partTwo()
-}
-
-func partOne() {
+func DayOnePartOne() {
 	elves := getCaloriesCarried()
 
 	fmt.Println(max(elves))
 }
 
-func partTwo() {
+func DayOnePartTwo() {
 	elves := getCaloriesCarried()
 
 	top := maxThree(elves)
@@ -51,23 +43,6 @@ func getCaloriesCarried() []int {
 	}
 
 	return elves
-}
-
-func readInput(file string) []string {
-	content, err := os.Open(file)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	scanner := bufio.NewScanner(content)
-
-	var lines []string
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-
-	return lines
 }
 
 func max(input []int) int {
