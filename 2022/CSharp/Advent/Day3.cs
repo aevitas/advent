@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace Advent;
+﻿namespace Advent;
 
 public static class Day3
 {
@@ -19,6 +17,27 @@ public static class Day3
             a.IntersectWith(b);
 
             priorities.Add(Chars.IndexOf(a.First()));
+        }
+
+        Console.WriteLine(priorities.Sum());
+    }
+
+    public static void PartTwo()
+    {
+        List<int> priorities = new List<int>();
+        for (int i = 0; i < Input.Length; i += 3)
+        {
+            var group = Input.Skip(i).Take(3);
+
+            HashSet<char> bag = null;
+            foreach (var e in group)
+            {
+                bag ??= e.ToHashSet();
+
+                bag.IntersectWith(e);
+            }
+
+            priorities.Add(Chars.IndexOf(bag.First()));
         }
 
         Console.WriteLine(priorities.Sum());
