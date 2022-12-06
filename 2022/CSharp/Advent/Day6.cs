@@ -10,9 +10,7 @@ public static class Day6
 
         for (int i = 4; i < input.Length; i++)
         {
-            var chunk = input.Skip(i - 4).Take(4);
-
-            if (chunk.Distinct().Count() == 4)
+            if (input.Skip(i - 4).Take(4).Distinct().Count() == 4)
             {
                 Console.WriteLine(i);
                 break;
@@ -26,9 +24,7 @@ public static class Day6
 
         for (int i = 14; i < input.Length; i++)
         {
-            var chunk = input.Skip(i - 14).Take(14);
-
-            if (chunk.Distinct().Count() == 14)
+            if (input.Skip(i - 14).Take(14).Distinct().Count() == 14)
             {
                 Console.WriteLine(i);
                 break;
