@@ -1,6 +1,5 @@
 ﻿using Advent;
 
-Day5.PartOne();
-Day5.PartTwo();
+Day6.PartOne();
 
 Console.ReadLine();
