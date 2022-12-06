@@ -19,4 +19,20 @@ public static class Day6
             }
         }
     }
+
+    public static void PartTwo()
+    {
+        var input = Input[0];
+
+        for (int i = 14; i < input.Length; i++)
+        {
+            var chunk = input.Skip(i - 14).Take(14);
+
+            if (chunk.Distinct().Count() == 14)
+            {
+                Console.WriteLine(i);
+                break;
+            }
+        }
+    }
 }
