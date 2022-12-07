@@ -28,6 +28,32 @@ public static class Day7
         Console.WriteLine(eligible.Sum());
     }
 
+    public static void PartTwo()
+    {
+        var fs = BuildFileSystem("2");
+
+        var fsSize = fs.EnumerateFiles("*.*", SearchOption.AllDirectories).Sum(f => f.Length);
+        var unused = 70000000 - fsSize;
+        var required = 30000000 - unused;
+
+        var dirs = fs.GetDirectories("*.*", SearchOption.AllDirectories);
+        var eligible = new List<long>();
+
+        foreach (var d in dirs)
+        {
+            var files = d.EnumerateFiles("*.*", SearchOption.AllDirectories);
+
+            var size = files.Sum(f => f.Length);
+
+            if (size <= required)
+                continue;
+
+            eligible.Add(size);
+        }
+
+        Console.WriteLine(eligible.Min());
+    }
+
     private static DirectoryInfo BuildFileSystem(string dir)
     {
         var root = new DirectoryInfo($"./fs/var/aoc/{dir}");
