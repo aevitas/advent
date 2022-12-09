@@ -8,9 +8,9 @@ public static class Day9
 
     public static void PartOne()
     {
-        Vector2 head = new Vector2(10,10);
-        Vector2 tail = new Vector2(10, 10);
-        Dictionary<Vector2, bool> visited = new Dictionary<Vector2, bool>
+        var head = new Vector2(10, 10);
+        var tail = new Vector2(10, 10);
+        var visited = new Dictionary<Vector2, bool>
         {
             {
                 tail, true
@@ -23,10 +23,7 @@ public static class Day9
             var dir = split[0];
             var num = int.Parse(split[1]);
 
-            for (int i = 0; i < num; i++)
-            {
-                Move(dir);
-            }
+            for (var i = 0; i < num; i++) Move(dir);
         }
 
         void Move(string mov)
@@ -52,9 +49,9 @@ public static class Day9
 
         Console.WriteLine(visited.Count);
 
-        for (int y = 0; y < 25; y++)
+        for (var y = 0; y < 25; y++)
         {
-            for (int x = 0; x < 25; x++)
+            for (var x = 0; x < 25; x++)
             {
                 var pos = new Vector2(x, y);
 
@@ -79,6 +76,55 @@ public static class Day9
 
     public static void PartTwo()
     {
+        var rope = new Vector2[10];
+        ref var tail = ref rope[^1];
 
+        var visited = new Dictionary<Vector2, bool>
+        {
+            {
+                tail, true
+            }
+        };
+
+        foreach (var line in Input)
+        {
+            var split = line.Split(' ');
+            var dir = split[0];
+            var num = int.Parse(split[1]);
+
+            for (var i = 0; i < num; i++) Move(dir, ref rope);
+        }
+
+        void Move(string mov, ref Vector2[] r)
+        {
+            ref var h = ref r[0];
+            h = mov switch
+            {
+                "L" => h with { X = h.X - 1 },
+                "R" => h with { X = h.X + 1 },
+                "U" => h with { Y = h.Y - 1 },
+                "D" => h with { Y = h.Y + 1 },
+                _ => h
+            };
+
+            for (var i = 1; i < r.Length; i++)
+            {
+                ref var p = ref rope[i - 1];
+                ref var c = ref rope[i];
+
+                var dX = Math.Abs(p.X - c.X);
+                var dY = Math.Abs(p.Y - c.Y);
+
+                if (dX < 2 && dY < 2)
+                    return;
+
+                c = new Vector2(c.X + Math.Sign(p.X - c.X), c.Y + Math.Sign(p.Y - c.Y));
+            }
+
+            ref var t = ref r[^1];
+            visited[t] = true;
+        }
+
+        Console.WriteLine(visited.Count);
     }
 }
