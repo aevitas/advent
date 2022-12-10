@@ -62,7 +62,7 @@ public static class Day10
 
         foreach (var c in t)
         {
-            var x = ops.Where(k => k.Key <= c).Select(k => k.Value).Sum() + 1;
+            var x = ops.Where(k => k.Key <= c - 1).Select(k => k.Value).Sum() + 1;
 
             reads.Add(x * c);
         }
