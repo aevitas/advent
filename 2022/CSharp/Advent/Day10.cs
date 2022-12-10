@@ -80,6 +80,28 @@ public static class Day10
 
     public static void PartTwo()
     {
+        int numTicks = 0;
+        int x = 1;
 
+        for (int i = 0; i < Input.Length; i++)
+        {
+            var split = Input[i].Split(' ');
+            var op = split[0];
+            var arg = split.Length > 1 ? split[1] : string.Empty;
+
+            int cycles = op == "noop" ? 1 : 2;
+            for (int y = 0; y < cycles; y++)
+            {
+                var p = numTicks % 40;
+                Console.Write(p == x || p == x - 1 || p == x + 1 ? '\u2588' : " ");
+                if (p % 40 == 39)
+                    Console.WriteLine();
+
+                numTicks++;
+            }
+
+            if (op == "addx")
+                x += int.Parse(arg);
+        }
     }
 }
