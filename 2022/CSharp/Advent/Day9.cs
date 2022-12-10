@@ -23,7 +23,8 @@ public static class Day9
             var dir = split[0];
             var num = int.Parse(split[1]);
 
-            for (var i = 0; i < num; i++) Move(dir);
+            for (var i = 0; i < num; i++) 
+                Move(dir);
         }
 
         void Move(string mov)
@@ -92,7 +93,8 @@ public static class Day9
             var dir = split[0];
             var num = int.Parse(split[1]);
 
-            for (var i = 0; i < num; i++) Move(dir, ref rope);
+            for (var i = 0; i < num; i++) 
+                Move(dir, ref rope);
         }
 
         void Move(string mov, ref Vector2[] r)
