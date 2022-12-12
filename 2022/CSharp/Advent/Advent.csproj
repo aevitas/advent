@@ -9,6 +9,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Dijkstra.Algorithm" Version="1.0.5" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Update="Day1.txt">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
