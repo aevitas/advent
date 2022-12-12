@@ -48,6 +48,10 @@ public static class Day11
         var monkeys = GetMonkeys();
         var inspections = new Dictionary<int, int>();
 
+        var c = 1;
+        foreach (var m in monkeys)
+            c = m.Value.Divisor * c;
+
         for (int i = 0; i < 10000; i++)
         {
             foreach (var monkey in monkeys)
@@ -55,7 +59,7 @@ public static class Day11
                 var m = monkey.Value;
                 while (m.Items.TryDequeue(out var j))
                 {
-                    var worry = m.Operation(j);
+                    var worry = m.Operation(j) % c;
 
                     if (worry % m.Divisor == 0)
                     {
