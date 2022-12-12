@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using Dijkstra.Algorithm.Graphing;
+﻿using Dijkstra.Algorithm.Graphing;
 using Dijkstra.Algorithm.Pathing;
 using Path = Dijkstra.Algorithm.Pathing.Path;
 
@@ -18,27 +17,27 @@ public static class Day12
         foreach (var node in grid)
         {
             var c = node.Key;
+            builder.AddNode(node.Key.ToString());
+            
             if (grid.TryGetValue((c.x - 1, c.y), out var l))
                 if (Characters.IndexOf(l) - Characters.IndexOf(node.Value) <= 1)
-                    builder.AddLink(new Vector2(node.Key.x, node.Key.y).ToString(),
-                        new Vector2(c.x - 1, c.y).ToString(), 1);
+                    builder.AddLink(node.Key.ToString(), (c.x - 1, c.y).ToString(),
+                        Characters.IndexOf(l) - Characters.IndexOf(node.Value));
 
             if (grid.TryGetValue((c.x + 1, c.y), out var r))
                 if (Characters.IndexOf(r) - Characters.IndexOf(node.Value) <= 1)
-                    builder.AddLink(new Vector2(node.Key.x, node.Key.y).ToString(),
-                        new Vector2(c.x + 1, c.y).ToString(), 1);
-            
+                    builder.AddLink(node.Key.ToString(), (c.x + 1, c.y).ToString(),
+                        Characters.IndexOf(r) - Characters.IndexOf(node.Value));
+
             if (grid.TryGetValue((c.x, c.y - 1), out var u))
                 if (Characters.IndexOf(u) - Characters.IndexOf(node.Value) <= 1)
-                    builder.AddLink(new Vector2(node.Key.x, node.Key.y).ToString(),
-                        new Vector2(c.x, c.y - 1).ToString(), 1);
+                    builder.AddLink(node.Key.ToString(), (c.x, c.y - 1).ToString(),
+                        Characters.IndexOf(u) - Characters.IndexOf(node.Value));
 
             if (grid.TryGetValue((c.x, c.y + 1), out var d))
                 if (Characters.IndexOf(d) - Characters.IndexOf(node.Value) <= 1)
-                    builder.AddLink(new Vector2(node.Key.x, node.Key.y).ToString(),
-                        new Vector2(c.x, c.y + 1).ToString(), 1);
-
-            builder.AddNode(new Vector2(node.Key.x, node.Key.y).ToString());
+                    builder.AddLink(node.Key.ToString(), (c.x, c.y + 1).ToString(),
+                        Characters.IndexOf(d) - Characters.IndexOf(node.Value));
         }
 
         var graph = builder.Build();
@@ -46,8 +45,7 @@ public static class Day12
         var start = grid.FirstOrDefault(c => c.Value == 'S');
         var end = grid.FirstOrDefault(c => c.Value == 'E');
 
-        var path = graph.Dijkstra(new Vector2(start.Key.x, start.Key.y).ToString(),
-            new Vector2(end.Key.x, end.Key.y).ToString());
+        var path = graph.Dijkstra(start.Key.ToString(), end.Key.ToString());
 
         Console.WriteLine(path.Segments.Count);
     }
@@ -60,27 +58,27 @@ public static class Day12
         foreach (var node in grid)
         {
             var c = node.Key;
+            builder.AddNode(node.Key.ToString());
+
             if (grid.TryGetValue((c.x - 1, c.y), out var l))
                 if (Characters.IndexOf(l) - Characters.IndexOf(node.Value) <= 1)
-                    builder.AddLink(new Vector2(node.Key.x, node.Key.y).ToString(),
-                        new Vector2(c.x - 1, c.y).ToString(), 1);
+                    builder.AddLink(node.Key.ToString(), (c.x - 1, c.y).ToString(),
+                        Characters.IndexOf(l) - Characters.IndexOf(node.Value));
 
             if (grid.TryGetValue((c.x + 1, c.y), out var r))
                 if (Characters.IndexOf(r) - Characters.IndexOf(node.Value) <= 1)
-                    builder.AddLink(new Vector2(node.Key.x, node.Key.y).ToString(),
-                        new Vector2(c.x + 1, c.y).ToString(), 1);
+                    builder.AddLink(node.Key.ToString(), (c.x + 1, c.y).ToString(),
+                        Characters.IndexOf(r) - Characters.IndexOf(node.Value));
 
             if (grid.TryGetValue((c.x, c.y - 1), out var u))
                 if (Characters.IndexOf(u) - Characters.IndexOf(node.Value) <= 1)
-                    builder.AddLink(new Vector2(node.Key.x, node.Key.y).ToString(),
-                        new Vector2(c.x, c.y - 1).ToString(), 1);
+                    builder.AddLink(node.Key.ToString(), (c.x, c.y - 1).ToString(),
+                        Characters.IndexOf(u) - Characters.IndexOf(node.Value));
 
             if (grid.TryGetValue((c.x, c.y + 1), out var d))
                 if (Characters.IndexOf(d) - Characters.IndexOf(node.Value) <= 1)
-                    builder.AddLink(new Vector2(node.Key.x, node.Key.y).ToString(),
-                        new Vector2(c.x, c.y + 1).ToString(), 1);
-
-            builder.AddNode(new Vector2(node.Key.x, node.Key.y).ToString());
+                    builder.AddLink(node.Key.ToString(), (c.x, c.y + 1).ToString(),
+                        Characters.IndexOf(d) - Characters.IndexOf(node.Value));
         }
 
         var graph = builder.Build();
@@ -91,8 +89,7 @@ public static class Day12
         List<Path> paths = new List<Path>();
         foreach (var s in starts)
         {
-            var path = graph.Dijkstra(new Vector2(s.Key.x, s.Key.y).ToString(),
-                new Vector2(end.Key.x, end.Key.y).ToString());
+            var path = graph.Dijkstra(s.Key.ToString(), end.Key.ToString());
 
             paths.Add(path);
         }
